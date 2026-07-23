@@ -17,10 +17,12 @@ public class inventoryServiceImpl implements IInventoryService {
 
     private final inventoryRepository inventoryRepository;
 
-    public inventory createInventory(inventory inventory) {
-        return inventoryRepository.save(inventory);
+    @Override
+    public List<inventory> createInventory(List<inventory> inventories) {
+        return inventoryRepository.saveAll(inventories);
     }
 
+    @Override
     public List<inventory> listInventory() {
         return inventoryRepository.findAll();
     }

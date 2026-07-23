@@ -8,6 +8,5 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import java.util.List;
 
 public interface IInevntoryController {
-    ResponseEntity<inventory> createInventory(@RequestBody inventory inventory);
-
+    ResponseEntity<List<inventory>> createInventory(@RequestBody List<inventory> inventories);
 }
