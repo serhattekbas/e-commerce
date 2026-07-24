@@ -24,8 +24,7 @@ public class Payment {
     private String paymentMethod;
     private double amount;
     private LocalDateTime paymentDate;
-
-
+    private String status; // success,failed,pending,refund
 
 
 }
