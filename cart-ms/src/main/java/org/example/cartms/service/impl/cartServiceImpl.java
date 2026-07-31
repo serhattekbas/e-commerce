@@ -1,6 +1,5 @@
 package org.example.cartms.service.impl;
 
-
 import lombok.AllArgsConstructor;
 import org.example.cartms.dto.InventoryDto;
 import org.example.cartms.feign.IInventoryClient;
@@ -18,7 +17,6 @@ public class cartServiceImpl implements ICartService {
     private final cartRepository cartRepository;
     private final IInventoryClient inventoryClient;
 
-
     @Override
     public List<InventoryDto> listInventory() {
         return inventoryClient.listInventory();
@@ -32,13 +30,15 @@ public class cartServiceImpl implements ICartService {
                 .findFirst()
                 .orElseThrow(() -> new RuntimeException("Product not found"));
 
+        inventoryClient.decreaseStock(product.getProductId(), inventoryDto.getQuantity().intValue());
+
         // Create a new shoppingCart item and save
         shoppingCart cartItem = new shoppingCart();
         cartItem.setProductId(product.getProductId());
         cartItem.setProductName(product.getProductName());
         cartItem.setPrice(product.getPrice());
         cartItem.setQuantity(inventoryDto.getQuantity().intValue());
-        cartItem.setTotalPrice(product.getPrice() * inventoryDto.getQuantity());
+        cartItem.setTotalPrice(product.getPrice() * inventoryDto.getQuantity().intValue());
 
         return cartRepository.save(cartItem);
     }
@@ -48,7 +48,4 @@ public class cartServiceImpl implements ICartService {
         cartRepository.deleteById(id);
     }
 
-
 }
-
-
