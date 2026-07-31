@@ -7,8 +7,9 @@ import org.example.inventoryms.service.IInventoryService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import jakarta.transaction.Transactional;
 
+import java.util.List;
 
 @Service
 @AllArgsConstructor
@@ -27,5 +28,17 @@ public class inventoryServiceImpl implements IInventoryService {
         return inventoryRepository.findAll();
     }
 
+    @Override
+    @Transactional
+    public void decreaseStock(Long productId, Integer quantity) {
+
+        inventory inventory = inventoryRepository.findByProductId(productId).orElseThrow();
+        if (inventory.getQuantity() < quantity) {
+            throw new RuntimeException("Stok yetersiz");
+        }
+        inventory.setQuantity(inventory.getQuantity() - quantity);
+        inventoryRepository.save(inventory);
+
+    }
 
 }

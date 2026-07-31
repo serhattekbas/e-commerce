@@ -1,6 +1,5 @@
 package org.example.inventoryms.controller.impl;
 
-
 import lombok.AllArgsConstructor;
 import org.example.inventoryms.controller.IInevntoryController;
 import org.example.inventoryms.model.inventory;
@@ -21,8 +20,7 @@ public class inventoryControllerImpl implements IInevntoryController {
     @PostMapping("/create")
     public ResponseEntity<List<inventory>> createInventory(@RequestBody List<inventory> inventories) {
 
-        List<inventory> createdInventories =
-                inventoryService.createInventory(inventories);
+        List<inventory> createdInventories = inventoryService.createInventory(inventories);
 
         return ResponseEntity.ok(createdInventories);
     }
@@ -33,4 +31,9 @@ public class inventoryControllerImpl implements IInevntoryController {
         return ResponseEntity.ok(list);
     }
 
+    @PostMapping("/decrease-stock")
+    public ResponseEntity<Void> decreaseStock(@RequestParam Long productId, @RequestParam Integer quantity) {
+        inventoryService.decreaseStock(productId, quantity);
+        return ResponseEntity.ok().build();
+    }
 }
