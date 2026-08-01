@@ -36,4 +36,11 @@ public class inventoryControllerImpl implements IInevntoryController {
         inventoryService.decreaseStock(productId, quantity);
         return ResponseEntity.ok().build();
     }
+
+    @PostMapping("/increase-stock")
+    public ResponseEntity<Void> increaseStock(@RequestParam Long productId, @RequestParam Integer quantity) {
+        inventoryService.increaseStock(productId, quantity);
+        return ResponseEntity.ok().build();
+    }
 }
+

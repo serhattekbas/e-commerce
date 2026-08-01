@@ -48,4 +48,15 @@ public class cartServiceImpl implements ICartService {
         cartRepository.deleteById(id);
     }
 
+    @Override
+    public List<shoppingCart> getCartItems() {
+        return cartRepository.findAll();
+    }
+
+    @Override
+    public void clearCart() {
+        cartRepository.deleteAll();
+    }
+
 }
+

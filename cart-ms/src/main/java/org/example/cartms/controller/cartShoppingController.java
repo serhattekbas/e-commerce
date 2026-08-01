@@ -34,4 +34,15 @@ public class cartShoppingController {
          return "Deleted product with successfully ";
     }
 
+    @GetMapping("/items")
+    public ResponseEntity<List<shoppingCart>> getCartItems() {
+        return ResponseEntity.ok(cartService.getCartItems());
+    }
+
+    @DeleteMapping("/clear")
+    public ResponseEntity<Void> clearCart() {
+        cartService.clearCart();
+        return ResponseEntity.ok().build();
+    }
 }
+

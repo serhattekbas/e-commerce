@@ -32,7 +32,7 @@ public class inventoryServiceImpl implements IInventoryService {
     @Transactional
     public void decreaseStock(Long productId, Integer quantity) {
 
-        inventory inventory = inventoryRepository.findByProductId(productId).orElseThrow();
+        inventory inventory = inventoryRepository.findByProductId(productId).orElseThrow(() -> new RuntimeException("Ürün bulunamadı: " + productId));
         if (inventory.getQuantity() < quantity) {
             throw new RuntimeException("Stok yetersiz");
         }
@@ -41,4 +41,13 @@ public class inventoryServiceImpl implements IInventoryService {
 
     }
 
+    @Override
+    @Transactional
+    public void increaseStock(Long productId, Integer quantity) {
+        inventory inventory = inventoryRepository.findByProductId(productId).orElseThrow(() -> new RuntimeException("Ürün bulunamadı: " + productId));
+        inventory.setQuantity(inventory.getQuantity() + quantity);
+        inventoryRepository.save(inventory);
+    }
+
 }
+

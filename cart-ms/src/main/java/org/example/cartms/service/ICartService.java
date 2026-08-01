@@ -9,4 +9,7 @@ public interface ICartService {
     List<InventoryDto> listInventory();
     shoppingCart addToCart(InventoryDto inventoryDto);
     void deleteItem(Long productId);
+    List<shoppingCart> getCartItems();
+    void clearCart();
 }
+

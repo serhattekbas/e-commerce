@@ -10,4 +10,7 @@ public interface IInventoryService {
     List<inventory> listInventory();
 
     void decreaseStock(Long productId, Integer quantity);
+
+    void increaseStock(Long productId, Integer quantity);
 }
+
