@@ -13,6 +13,8 @@ import com.example.order_ms.repository.OrderRepository;
 import com.example.order_ms.service.OrderService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
+import org.apache.catalina.User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,12 +32,13 @@ public class OrderServiceImpl implements OrderService {
     private final CartClient cartClient;
     private final InventoryClient inventoryClient;
     private final PaymentClient paymentClient;
+    private final com.example.order_ms.kafka.OrderEventProducer orderEventProducer;
 
     @Override
     @Transactional
     public OrderResponse createOrder(CreateOrderRequest request) {
         // 1. Sepet verilerini al
-        List<CartClient.CartItemResponse> cartItems = cartClient.getCartItems();
+        List<CartClient.CartItemResponse> cartItems = cartClient.getCartItems(request.getUserId());
         if (cartItems == null || cartItems.isEmpty()) {
             throw new IllegalStateException("Sepetinizde ürün bulunmamaktadır.");
         }
@@ -102,9 +105,23 @@ public class OrderServiceImpl implements OrderService {
             if (paymentResponse != null && "SUCCESS".equalsIgnoreCase(paymentResponse.getStatus())) {
                 savedOrder.setStatus(OrderStatus.APPROVED);
                 orderRepository.save(savedOrder);
+
+                // Kafka Event Fırlat (Asenkron Haberleşme)
+                try {
+                    com.example.order_ms.event.OrderCreatedEvent event = com.example.order_ms.event.OrderCreatedEvent
+                            .builder()
+                            .orderId(savedOrder.getId())
+                            .userId(savedOrder.getUserId())
+                            .totalPrice(savedOrder.getTotalPrice())
+                            .build();
+                    orderEventProducer.sendOrderCreatedEvent(event);
+                } catch (Exception ex) {
+                    log.error("Kafka event gönderimi hatası: {}", ex.getMessage());
+                }
+
                 // Sepeti temizle
                 try {
-                    cartClient.clearCart();
+                    cartClient.clearCart(request.getUserId());
                 } catch (Exception e) {
                     log.warn("Sipariş tamamlandı fakat sepet temizlenemedi: {}", e.getMessage());
                 }

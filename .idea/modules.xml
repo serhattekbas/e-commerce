@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/e-commerce.iml" filepath="$PROJECT_DIR$/e-commerce.iml" />
+      <module fileurl="file://$PROJECT_DIR$/payment-ms/payment-ms.iml" filepath="$PROJECT_DIR$/payment-ms/payment-ms.iml" />
     </modules>
   </component>
 </project>

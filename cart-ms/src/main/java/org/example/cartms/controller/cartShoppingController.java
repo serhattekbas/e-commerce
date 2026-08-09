@@ -22,27 +22,28 @@ public class cartShoppingController {
         return ResponseEntity.ok(products);
     }
 
-    @PostMapping("/add")
-    public ResponseEntity<shoppingCart> addToCart(@RequestBody InventoryDto inventoryDto) {
-        shoppingCart savedCart = cartService.addToCart(inventoryDto);
+    @PostMapping("/add/{userId}")
+    public ResponseEntity<shoppingCart> addToCart(@RequestBody InventoryDto inventoryDto,
+            @PathVariable("userId") Long userId) {
+        shoppingCart savedCart = cartService.addToCart(inventoryDto, userId);
         return ResponseEntity.ok(savedCart);
     }
 
     @DeleteMapping("/delete/{id}")
     public String deleteProduct(@PathVariable("id") Long productId) {
-         cartService.deleteItem(productId);
-         return "Deleted product with successfully ";
+        cartService.deleteItem(productId);
+        return "Deleted product with successfully ";
     }
 
-    @GetMapping("/items")
-    public ResponseEntity<List<shoppingCart>> getCartItems() {
-        return ResponseEntity.ok(cartService.getCartItems());
+    @GetMapping("/items/{userId}")
+    public ResponseEntity<List<shoppingCart>> getCartItems(@PathVariable("userId") Long userId) {
+        List<shoppingCart> cartItems = cartService.getCartItems(userId);
+        return ResponseEntity.ok(cartItems);
     }
 
-    @DeleteMapping("/clear")
-    public ResponseEntity<Void> clearCart() {
-        cartService.clearCart();
+    @DeleteMapping("/clear/{userId}")
+    public ResponseEntity<Void> clearCart(@PathVariable("userId") Long userId) {
+        cartService.clearCart(userId);
         return ResponseEntity.ok().build();
     }
 }
-

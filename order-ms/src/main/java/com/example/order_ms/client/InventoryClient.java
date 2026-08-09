@@ -3,19 +3,13 @@ package com.example.order_ms.client;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
-@FeignClient(name = "inventory-ms", url = "http://localhost:8080") // Inventory Service'in adresi
+@FeignClient(name = "inventory-ms", url = "http://localhost:8080")
 public interface InventoryClient {
-    @PostMapping("/inventory/decrease")
-    void decreaseInventory(@RequestBody List<StockUpdateRequest> requests);
 
-    @PostMapping("/inventory/increase")
-    void increaseInventory(@RequestBody List<StockUpdateRequest> requests);
+    @PostMapping("/api/inventory/decrease-stock")
+    void decreaseStock(@RequestParam("productId") Long productId, @RequestParam("quantity") Integer quantity);
+
+    @PostMapping("/api/inventory/increase-stock")
+    void increaseStock(@RequestParam("productId") Long productId, @RequestParam("quantity") Integer quantity);
 }
 
-class StockUpdateRequest {
-    private Long productId;
-    private Integer quantity;
-    // Getters and setters
-}

@@ -8,6 +8,8 @@ import org.example.cartms.repository.cartRepository;
 import org.example.cartms.service.ICartService;
 import org.springframework.stereotype.Service;
 
+import jakarta.transaction.Transactional;
+
 import java.util.List;
 
 @Service
@@ -23,7 +25,7 @@ public class cartServiceImpl implements ICartService {
     }
 
     @Override
-    public shoppingCart addToCart(InventoryDto inventoryDto) {
+    public shoppingCart addToCart(InventoryDto inventoryDto, Long userId) {
         // Find the product in the inventory list
         InventoryDto product = inventoryClient.listInventory().stream()
                 .filter(p -> p.getProductId().equals(inventoryDto.getProductId()))
@@ -34,6 +36,7 @@ public class cartServiceImpl implements ICartService {
 
         // Create a new shoppingCart item and save
         shoppingCart cartItem = new shoppingCart();
+        cartItem.setUserId(userId);
         cartItem.setProductId(product.getProductId());
         cartItem.setProductName(product.getProductName());
         cartItem.setPrice(product.getPrice());
@@ -49,14 +52,18 @@ public class cartServiceImpl implements ICartService {
     }
 
     @Override
-    public List<shoppingCart> getCartItems() {
-        return cartRepository.findAll();
+    public List<shoppingCart> getCartItems(Long userId) {
+        List<shoppingCart> items = cartRepository.findByUserId(userId);
+        if (items.isEmpty()) {
+            throw new RuntimeException("Your cart is empty");
+        }
+        return items;
     }
 
     @Override
-    public void clearCart() {
-        cartRepository.deleteAll();
+    @Transactional
+    public void clearCart(Long userId) {
+        cartRepository.deleteByUserId(userId);
     }
 
 }
-

@@ -7,9 +7,12 @@ import java.util.List;
 
 public interface ICartService {
     List<InventoryDto> listInventory();
-    shoppingCart addToCart(InventoryDto inventoryDto);
-    void deleteItem(Long productId);
-    List<shoppingCart> getCartItems();
-    void clearCart();
-}
 
+    shoppingCart addToCart(InventoryDto inventoryDto, Long userId);
+
+    void deleteItem(Long productId);
+
+    List<shoppingCart> getCartItems(Long userId);
+
+    void clearCart(Long userId);
+}
