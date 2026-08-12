@@ -21,7 +21,7 @@ public class KafkaConsumerConfig {
     @Bean
     public ConsumerFactory<String, OrderCreatedEvent> consumerFactory() {
         JsonDeserializer<OrderCreatedEvent> deserializer = new JsonDeserializer<>(OrderCreatedEvent.class);
-        deserializer.setRemoveTypeHeaders(false);
+        deserializer.setUseTypeHeaders(false); // gonderenin java paket adini onemseme
         deserializer.addTrustedPackages("*");
 
         Map<String, Object> configProps = new HashMap<>();
@@ -29,6 +29,7 @@ public class KafkaConsumerConfig {
         configProps.put(ConsumerConfig.GROUP_ID_CONFIG, "inventory-group");
         configProps.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
         configProps.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, deserializer);
+        configProps.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest"); // kacan mesajlari okumasi icin
 
         return new DefaultKafkaConsumerFactory<>(configProps, new StringDeserializer(), deserializer);
     }

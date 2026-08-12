@@ -6,6 +6,7 @@ import org.example.cartms.feign.IInventoryClient;
 import org.example.cartms.model.shoppingCart;
 import org.example.cartms.repository.cartRepository;
 import org.example.cartms.service.ICartService;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import jakarta.transaction.Transactional;
@@ -51,6 +52,7 @@ public class cartServiceImpl implements ICartService {
         cartRepository.deleteById(id);
     }
 
+    @Cacheable(value = "cart", key = "#userId")
     @Override
     public List<shoppingCart> getCartItems(Long userId) {
         List<shoppingCart> items = cartRepository.findByUserId(userId);

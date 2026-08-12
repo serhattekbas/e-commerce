@@ -42,5 +42,10 @@ public class inventoryControllerImpl implements IInevntoryController {
         inventoryService.increaseStock(productId, quantity);
         return ResponseEntity.ok().build();
     }
-}
 
+    @PutMapping("/update/{productId}")
+    public ResponseEntity<inventory> updateInventory(@PathVariable("productId") Long productId,
+            @RequestBody inventory inventory) {
+        return inventoryService.updateInventory(productId, inventory);
+    }
+}
